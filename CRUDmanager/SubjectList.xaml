@@ -1,0 +1,40 @@
+﻿<local:FramedPage x:Class="CRUDmanager.SubjectList"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CRUDmanager"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="600"
+      Title="SubjectList">
+
+    <Grid Background="#FFE5E5E5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ComboBox x:Name="cbSubjects" HorizontalAlignment="Stretch" Margin="10 40 10 0" VerticalAlignment="Top" SelectionChanged="cbSubjects_SelectionChanged"/>
+        <Label Content="Subjects:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="180"/>
+        <Label x:Name="lblName" Content="Name" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="130" Visibility="Hidden"/>
+        <Label x:Name="lblSubjectName" Content="" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label x:Name="lblEcts" Content="Ects" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="130" Visibility="Hidden"/>
+        <Label x:Name="lblSubjectEcts" Content="" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="130"/>
+        <Label x:Name="lblProfessor" Content="Professor" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Width="130" Visibility="Hidden"/>
+        <Label x:Name="lblSubjectProfessor" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="130"/>
+        <StackPanel Grid.Column="1" Margin="10">
+            <Label Content="Students:" HorizontalAlignment="Stretch" />
+            <ListView x:Name="lvStudents" HorizontalAlignment="Stretch" MinHeight="300" MouseDoubleClick="lvStudents_MouseDoubleClick">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="95" Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
+                        <GridViewColumn Width="95" Header="Last name" DisplayMemberBinding="{Binding LastName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 20 10 0">
+                <Button x:Name="btnAdd" Click="btnAdd_Click" Content="Add" HorizontalAlignment="Stretch" Padding="5"/>
+                <Button x:Name="btnRemove" Click="btnRemove_Click" Content="Remove" HorizontalAlignment="Stretch" Padding="5" Margin="50 0 0 0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</local:FramedPage>
