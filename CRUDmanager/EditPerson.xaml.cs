@@ -40,6 +40,7 @@ namespace CRUDmanager
             {
                 UniversityViewModel.Update(_student!);
             }
+            Frame?.GoBack();
         }
 
         private bool FormIsValid() => spObjectInfo.Children.OfType<TextBox>().Any(tb => !string.IsNullOrWhiteSpace(tb.Text));

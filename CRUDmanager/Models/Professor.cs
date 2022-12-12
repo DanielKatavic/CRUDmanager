@@ -2,7 +2,7 @@
 
 namespace CRUDmanager.Models
 {
-    public record Professor(int Id, string FirstName, string LastName) : IDataReadable
+    public record Professor(int Id, string FirstName, string LastName) : Person(Id, FirstName, LastName), IDataReadable
     {
         public static dynamic GetInstanceFromDataReader(SqlDataReader dr)
         {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -59,7 +60,7 @@ namespace CRUDmanager.ViewModels
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddStudent(Students[e.NewStartingIndex]);
+                    _repository.AddOrUpdatePerson(Students[e.NewStartingIndex]);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     _repository.RemoveStudent(e.OldItems?.OfType<Student>().First());

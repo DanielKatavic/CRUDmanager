@@ -1,7 +1,9 @@
 ﻿using CRUDmanager.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 
@@ -11,23 +13,6 @@ namespace CRUDmanager.Dal
     {
         private const string MethodName = nameof(IDataReadable.GetInstanceFromDataReader);
         private static readonly string? connectionString = App.Configuration?.GetConnectionString(nameof(connectionString));
-
-        public void AddStudent(Student? student)
-        {
-            using (SqlConnection con = new(connectionString))
-            {
-                con.Open();
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = MethodBase.GetCurrentMethod()?.Name;
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@FirstName", System.Data.SqlDbType.NVarChar));
-                    cmd.Parameters.Add(new SqlParameter("@LastName", System.Data.SqlDbType.NVarChar));
-                    cmd.Parameters[0].Value = student?.FirstName;
-                    cmd.Parameters[1].Value = student?.LastName;
-                }
-            }
-        }
 
         public ICollection<T> GetCollectionOfModel<T>()
         {
@@ -108,36 +93,43 @@ namespace CRUDmanager.Dal
             return students;
         }
 
-        public void RemoveStudent(Student? student)
+        public void RemovePerson(Person? person)
         {
             using (SqlConnection con = new(connectionString))
             {
                 con.Open();
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = MethodBase.GetCurrentMethod()?.Name;
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.Int));
-                    cmd.Parameters[0].Value = student?.Id;
+                    cmd.CommandText = $"Remove{person?.GetType().Name}";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int));
+                    cmd.Parameters[0].Value = person?.Id;
                 }
             }
         }
 
-        public void UpdateStudent(Student? student)
+        public void AddOrUpdatePerson(Person? person)
         {
             using (SqlConnection con = new(connectionString))
             {
                 con.Open();
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = MethodBase.GetCurrentMethod()?.Name;
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.Int));
-                    cmd.Parameters.Add(new SqlParameter("@FirstName", System.Data.SqlDbType.NVarChar));
-                    cmd.Parameters.Add(new SqlParameter("@LastName", System.Data.SqlDbType.NVarChar));
-                    cmd.Parameters[0].Value = student?.Id;
-                    cmd.Parameters[1].Value = student?.FirstName;
-                    cmd.Parameters[2].Value = student?.LastName;
+                    cmd.CommandText = person?.Id == -1 ? $"Add{person?.GetType().Name}" : $"Update{person?.GetType().Name}";
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    PropertyInfo[]? propertyInfos = person?.GetType().GetProperties();
+                    ICollection<SqlParameter> parameters = new List<SqlParameter>();
+
+                    foreach (var propertyInfo in propertyInfos?.Take(propertyInfos.Length - 2) ?? Enumerable.Empty<PropertyInfo>())
+                    {
+                        parameters.Add(new SqlParameter($"@{propertyInfo.Name}", propertyInfo.PropertyType == typeof(int) ? SqlDbType.Int : SqlDbType.NVarChar, 50)
+                        {
+                            Value = propertyInfo.GetValue(person)
+                        });
+                    }
+
+                    cmd.Parameters.AddRange(parameters.ToArray());
                 }
             }
         }
