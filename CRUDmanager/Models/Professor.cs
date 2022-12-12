@@ -2,9 +2,9 @@
 
 namespace CRUDmanager.Models
 {
-    public record Professor(int Id, string FirstName, string LastName) : Person(Id, FirstName, LastName), IDataReadable
+    public record Professor(int Id, string FirstName, string LastName) : Person(Id, FirstName, LastName)
     {
-        public static dynamic GetInstanceFromDataReader(SqlDataReader dr)
+        public static new dynamic GetInstanceFromDataReader(SqlDataReader dr)
         {
             return new Professor((int)dr[0],
                     dr[1].ToString() ?? string.Empty,

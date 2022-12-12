@@ -23,7 +23,7 @@ namespace CRUDmanager.Dal
                 using (SqlCommand cmd = con.CreateCommand())
                 {
                     cmd.CommandText = $"Get{typeof(T).Name}s";
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
@@ -50,8 +50,8 @@ namespace CRUDmanager.Dal
                 using (SqlCommand cmd = con.CreateCommand())
                 {
                     cmd.CommandText = MethodBase.GetCurrentMethod()?.Name;
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.Int));
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int));
                     cmd.Parameters[0].Value = id;
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
@@ -65,7 +65,7 @@ namespace CRUDmanager.Dal
                     }
                 }
             }
-            throw new System.ArgumentNullException();
+            throw new ArgumentNullException(nameof(id));
         }
 
         public ICollection<Student> GetStudentsForSubject(int subjectId)
@@ -77,8 +77,8 @@ namespace CRUDmanager.Dal
                 using (SqlCommand cmd = con.CreateCommand())
                 {
                     cmd.CommandText = MethodBase.GetCurrentMethod()?.Name;
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@subjectId", System.Data.SqlDbType.Int));
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@subjectId", SqlDbType.Int));
                     cmd.Parameters[0].Value = subjectId;
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
@@ -115,7 +115,7 @@ namespace CRUDmanager.Dal
                 con.Open();
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = person?.Id == -1 ? $"Add{person?.GetType().Name}" : $"Update{person?.GetType().Name}";
+                    cmd.CommandText = $"{(person?.Id == -1 ? "Add" : "Update")}{person?.GetType().Name}";
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     PropertyInfo[]? propertyInfos = person?.GetType().GetProperties();

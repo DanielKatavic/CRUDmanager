@@ -44,13 +44,13 @@ namespace CRUDmanager.ViewModels
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddStudent(Students[e.NewStartingIndex]);
+                    _repository.AddOrUpdatePerson(Students[e.NewStartingIndex]);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemoveStudent(e.OldItems?.OfType<Student>().First());
+                    _repository.RemovePerson(e.OldItems?.OfType<Student>().First());
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.UpdateStudent(e.NewItems?.OfType<Student>().First());
+                    _repository.AddOrUpdatePerson(e.NewItems?.OfType<Student>().First());
                     break;
             }
         }
@@ -63,10 +63,10 @@ namespace CRUDmanager.ViewModels
                     _repository.AddOrUpdatePerson(Students[e.NewStartingIndex]);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemoveStudent(e.OldItems?.OfType<Student>().First());
+                    _repository.RemovePerson(e.OldItems?.OfType<Student>().First());
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.UpdateStudent(e.NewItems?.OfType<Student>().First());
+                    _repository.AddOrUpdatePerson(e.NewItems?.OfType<Student>().First());
                     break;
             }
         }

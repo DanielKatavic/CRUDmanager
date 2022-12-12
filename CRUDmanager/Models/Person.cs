@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.Data.SqlClient;
+using System.ComponentModel;
 using System.Linq;
 
 namespace CRUDmanager.Models
 {
-    public abstract record Person(int Id, string FirstName, string LastName) : IDataErrorInfo
+    public abstract record Person(int Id, string FirstName, string LastName) : IDataErrorInfo, IDataReadable
     {
         public string Error => string.Empty;
 
@@ -34,6 +35,11 @@ namespace CRUDmanager.Models
                 }
             }
             return string.Empty;
+        }
+
+        public static dynamic GetInstanceFromDataReader(SqlDataReader dr)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
