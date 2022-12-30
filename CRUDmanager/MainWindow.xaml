@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CRUDmanager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        </Frame>
-    </Grid>
+        Title="MainWindow" Height="500" Width="600" WindowStartupLocation="CenterScreen">
+    <TabControl>
+        <TabItem Header="Subject list">
+            <Frame x:Name="SubjectListFrame" NavigationUIVisibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            </Frame>
+        </TabItem>
+        <TabItem Header="Person list">
+            <Frame x:Name="PersonListFrame" NavigationUIVisibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            </Frame>
+        </TabItem>
+    </TabControl>
 </Window>

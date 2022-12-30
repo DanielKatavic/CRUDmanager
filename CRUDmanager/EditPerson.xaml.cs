@@ -14,13 +14,10 @@ namespace CRUDmanager
     /// </summary>
     public partial class EditPerson : FramedPage
     {
-        private Student? _student;
-
-        public EditPerson(ViewModels.UniversityViewModel universityViewModel, Student? selectedStudent = null) : base(universityViewModel)
+        public EditPerson(ViewModels.UniversityViewModel universityViewModel, Person? selectedPerson = null) : base(universityViewModel)
         {
             InitializeComponent();
-            _student = selectedStudent ?? new Student(-1, string.Empty, string.Empty);
-            DataContext = _student;
+            DataContext = selectedPerson ?? new Student(-1, string.Empty, string.Empty);
         }
 
         private void BtnGetBack_Click(object sender, RoutedEventArgs e) => Frame?.GoBack();
@@ -31,14 +28,21 @@ namespace CRUDmanager
             {
                 return;
             }
-            _student = DataContext as Student;
-            if (_student?.Id == -1)
+            Person? person = DataContext as Person;
+            if (person?.Id == -1)
             {
-                UniversityViewModel.Students.Add(_student);
+                if (person is Student)
+                {
+                    UniversityViewModel.Students.Add(person as Student);
+                }
+                else
+                {
+                    UniversityViewModel.Professors.Add(person as Professor);
+                }
             }
             else
             {
-                UniversityViewModel.Update(_student!);
+                UniversityViewModel.Update(person!);
             }
             Frame?.GoBack();
         }

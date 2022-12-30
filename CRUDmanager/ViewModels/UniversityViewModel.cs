@@ -3,10 +3,7 @@ using CRUDmanager.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace CRUDmanager.ViewModels
 {
@@ -71,7 +68,7 @@ namespace CRUDmanager.ViewModels
             }
         }
 
-        internal void Update(Student student)
+        internal void Update(Person person)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,5 @@
 ﻿using CRUDmanager.Models;
 using CRUDmanager.ViewModels;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -17,38 +16,74 @@ namespace CRUDmanager
             cbSubjects.ItemsSource = universityViewModel.Subjects;
         }
 
-        private void cbSubjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbSubjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Subject selectedSubject = (Subject)cbSubjects.SelectedItem;
-            lblSubjectName.Content = selectedSubject.Name;
-            lblSubjectEcts.Content = selectedSubject.Ects;
-            lblSubjectProfessor.Content = selectedSubject.Professor;
+            Subject? selectedSubject = cbSubjects.SelectedItem as Subject;
+
+            FillSubjectInfo(selectedSubject);
+
+            SetSubjectInfoVisible();
+
+            lvStudents.ItemsSource = UniversityViewModel.GetStudentsForSubject(selectedSubject!.Id);
+        }
+
+        private void FillSubjectInfo(Subject? selectedSubject)
+        {
+            lblSubjectName.Content = selectedSubject?.Name;
+            lblSubjectEcts.Content = selectedSubject?.Ects;
+            lblSubjectProfessor.Content = selectedSubject?.Professor;
+        }
+
+        private void SetSubjectInfoVisible()
+        {
             lblName.Visibility = Visibility.Visible;
             lblEcts.Visibility = Visibility.Visible;
             lblProfessor.Visibility = Visibility.Visible;
-
-            lvStudents.ItemsSource = UniversityViewModel.GetStudentsForSubject(selectedSubject.Id);
+            subjectButtons.Visibility = Visibility.Visible;
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             Frame?.Navigate(new EditPerson(UniversityViewModel) { Frame = Frame });
         }
 
-        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        private void BtnRemove_Click(object sender, RoutedEventArgs e)
         {
-            if (lvStudents?.SelectedItem is null) return;
+            if (lvStudents.SelectedItem is not Student selectedStudent)
+            {
+                return;
+            }
             if (MessageBox.Show("Are you sure?") == MessageBoxResult.OK)
             {
-                UniversityViewModel.Students.Remove((Student)lvStudents.SelectedItem);
+                UniversityViewModel.Students.Remove(selectedStudent);
             }
         }
 
-        private void lvStudents_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void LvStudents_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (lvStudents.SelectedItem is Student selectedStudent)
             {
                 Frame?.Navigate(new EditPerson(UniversityViewModel, selectedStudent) { Frame = Frame });
+            }
+        }
+
+        private void BtnEditSubject_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbSubjects.SelectedItem is Subject selectedSubject)
+            {
+                //Frame?.Navigate(new EditPerson(UniversityViewModel, selectedSubject) { Frame = Frame });
+            }
+        }
+
+        private void BtnRemoveSubject_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbSubjects.SelectedItem is not Subject selectedSubject)
+            {
+                return;
+            }
+            if (MessageBox.Show($"Are you sure you want to delete {selectedSubject.Name}?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                UniversityViewModel.Subjects.Remove(selectedSubject);
             }
         }
     }

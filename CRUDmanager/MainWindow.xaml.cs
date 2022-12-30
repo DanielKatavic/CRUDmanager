@@ -1,9 +1,4 @@
-﻿using CRUDmanager.Dal;
-using CRUDmanager.Models;
-using CRUDmanager.ViewModels;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using CRUDmanager.ViewModels;
 using System.Windows;
 
 namespace CRUDmanager
@@ -16,7 +11,8 @@ namespace CRUDmanager
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new SubjectList(new UniversityViewModel()) { Frame = MainFrame });
+            SubjectListFrame.Navigate(new SubjectList(new UniversityViewModel()) { Frame = SubjectListFrame });
+            PersonListFrame.Navigate(new PersonList(new UniversityViewModel()) { Frame = PersonListFrame });
         }
     }
 }

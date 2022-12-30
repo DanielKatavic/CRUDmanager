@@ -13,7 +13,11 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="cbSubjects" HorizontalAlignment="Stretch" Margin="10 40 10 0" VerticalAlignment="Top" SelectionChanged="cbSubjects_SelectionChanged"/>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="cbSubjects" HorizontalAlignment="Stretch" Margin="10 40 10 0" VerticalAlignment="Top" SelectionChanged="CbSubjects_SelectionChanged"/>
         <Label Content="Subjects:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="180"/>
         <Label x:Name="lblName" Content="Name" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="130" Visibility="Hidden"/>
         <Label x:Name="lblSubjectName" Content="" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Width="130"/>
@@ -23,7 +27,7 @@
         <Label x:Name="lblSubjectProfessor" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="130"/>
         <StackPanel Grid.Column="1" Margin="10">
             <Label Content="Students:" HorizontalAlignment="Stretch" />
-            <ListView x:Name="lvStudents" HorizontalAlignment="Stretch" MinHeight="300" MouseDoubleClick="lvStudents_MouseDoubleClick">
+            <ListView x:Name="lvStudents" HorizontalAlignment="Stretch" MinHeight="300" MouseDoubleClick="LvStudents_MouseDoubleClick">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="95" Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
@@ -31,10 +35,14 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 20 10 0">
-                <Button x:Name="btnAdd" Click="btnAdd_Click" Content="Add" HorizontalAlignment="Stretch" Padding="5"/>
-                <Button x:Name="btnRemove" Click="btnRemove_Click" Content="Remove" HorizontalAlignment="Stretch" Padding="5" Margin="50 0 0 0"/>
-            </StackPanel>
+        </StackPanel>
+        <StackPanel x:Name="subjectButtons" Visibility="Hidden" Grid.Row="1" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="10">
+            <Button x:Name="btnEditSubject" Click="BtnEditSubject_Click" Content="Edit" HorizontalAlignment="Stretch" Padding="5" MinWidth="100"/>
+            <Button x:Name="btnRemoveSubject" Click="BtnRemoveSubject_Click" Content="Remove" Padding="5" MinWidth="100" Margin="0 10 0 0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="10">
+            <Button x:Name="btnAdd" Click="BtnAdd_Click" Content="Add" HorizontalAlignment="Stretch" Padding="5" MinWidth="100"/>
+            <Button x:Name="btnRemove" Click="BtnRemove_Click" Content="Remove" Padding="5" MinWidth="100" Margin="0 10 0 0"/>
         </StackPanel>
     </Grid>
 </local:FramedPage>
