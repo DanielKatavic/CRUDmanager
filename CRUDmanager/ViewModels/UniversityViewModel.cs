@@ -11,23 +11,23 @@ namespace CRUDmanager.ViewModels
     {
         private readonly IRepository _repository = RepositoryFactory.GetRepository();
 
-        public ObservableCollection<Student> Students { get; set; }
+        public ObservableCollection<Person> Students { get; set; }
         public ObservableCollection<Subject> Subjects { get; }
-        public ObservableCollection<Professor> Professors { get; }
+        public ObservableCollection<Person> Professors { get; }
 
         public UniversityViewModel()
         {
-            Students = new ObservableCollection<Student>(_repository.GetCollectionOfModel<Student>());
+            Students = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Student>());
             Subjects = new ObservableCollection<Subject>(_repository.GetCollectionOfModel<Subject>());
-            Professors = new ObservableCollection<Professor>(_repository.GetCollectionOfModel<Professor>());
+            Professors = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Professor>());
             Students.CollectionChanged += Students_CollectionChanged;
             Subjects.CollectionChanged += Subjects_CollectionChanged;
             Professors.CollectionChanged += Professors_CollectionChanged;
         }
 
-        public ICollection<Student> GetStudentsForSubject(int id)
+        public ICollection<Person> GetStudentsForSubject(int id)
         {
-            Students = new ObservableCollection<Student>(_repository.GetStudentsForSubject(id));
+            Students = new ObservableCollection<Person>(_repository.GetStudentsForSubject(id));
             return Students;
         }
 

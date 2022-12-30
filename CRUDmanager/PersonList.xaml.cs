@@ -1,4 +1,6 @@
-﻿using CRUDmanager.ViewModels;
+﻿using CRUDmanager.Models;
+using CRUDmanager.ViewModels;
+using System.Windows.Controls;
 
 namespace CRUDmanager
 {
@@ -12,6 +14,16 @@ namespace CRUDmanager
             InitializeComponent();
             lvStudents.ItemsSource = universityViewModel.Students;
             lvProfessors.ItemsSource = universityViewModel.Professors;
+        }
+
+        private void PersonList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Person? selectedPerson = (sender as ListView)?.SelectedItem as Person;
+            if (selectedPerson is null)
+            {
+                return;
+            }
+            Frame?.Navigate(new EditPerson(UniversityViewModel, selectedPerson) { Frame = Frame });
         }
     }
 }

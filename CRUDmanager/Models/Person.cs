@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CRUDmanager.Models
 {
-    public abstract record Person(int Id, string FirstName, string LastName) : IDataErrorInfo, IDataReadable
+    public record Person(int Id, string FirstName, string LastName) : IDataErrorInfo, IDataReadable
     {
         public string Error => string.Empty;
 
@@ -39,7 +39,11 @@ namespace CRUDmanager.Models
 
         public static dynamic GetInstanceFromDataReader(SqlDataReader dr)
         {
-            throw new System.NotImplementedException();
+            return new Person((int)dr[0],
+                    dr[1].ToString() ?? string.Empty,
+                    dr[2].ToString() ?? string.Empty);
         }
+
+        public override string ToString() => $"{FirstName} {LastName}";
     }
 }

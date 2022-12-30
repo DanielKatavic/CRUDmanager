@@ -11,7 +11,6 @@ namespace CRUDmanager.Dal
 {
     public class SqlRepository : IRepository
     {
-        private const string MethodName = nameof(IDataReadable.GetInstanceFromDataReader);
         private static readonly string? connectionString = App.Configuration?.GetConnectionString(nameof(connectionString));
 
         public ICollection<T> GetCollectionOfModel<T>()
@@ -29,11 +28,17 @@ namespace CRUDmanager.Dal
                     {
                         while (dr.Read())
                         {
-                            MethodInfo? methodInfo = typeof(T).GetMethods().FirstOrDefault(m => m.Name == MethodName);
-                            var obj = methodInfo?.Invoke(null, new object[] { dr });
-                            if (obj is not null)
+                            var method = typeof(T).GetInterfaceMap(typeof(IDataReadable)).TargetMethods.First();
+                            var obj = method?.Invoke(null, new object[] { dr });
+
+                            if (obj is Person person)
                             {
-                                models.Add((T)obj);
+                                var tempObj = Activator.CreateInstance(typeof(T), new object[] { person });
+                                models.Add((T)tempObj!);
+                            }
+                            else
+                            {
+                                models.Add((T)obj!);
                             }
                         }
                     }
@@ -58,9 +63,8 @@ namespace CRUDmanager.Dal
                     {
                         while (dr.Read())
                         {
-                            return new Professor((int)dr[0],
-                                dr[1].ToString() ?? string.Empty,
-                                dr[2].ToString() ?? string.Empty);
+                            var person = Person.GetInstanceFromDataReader(dr);
+                            return new Professor(person);
                         }
                     }
                 }
@@ -85,7 +89,9 @@ namespace CRUDmanager.Dal
                     {
                         while (dr.Read())
                         {
-                            students.Add(Student.GetInstanceFromDataReader(dr));
+                            var person = Person.GetInstanceFromDataReader(dr);
+                            var student = new Student(person);
+                            students.Add(student);
                         }
                     }
                 }

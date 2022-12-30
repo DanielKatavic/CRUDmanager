@@ -17,7 +17,7 @@ namespace CRUDmanager
         public EditPerson(ViewModels.UniversityViewModel universityViewModel, Person? selectedPerson = null) : base(universityViewModel)
         {
             InitializeComponent();
-            DataContext = selectedPerson ?? new Student(-1, string.Empty, string.Empty);
+            DataContext = selectedPerson ?? new Person(-1, string.Empty, string.Empty);
         }
 
         private void BtnGetBack_Click(object sender, RoutedEventArgs e) => Frame?.GoBack();

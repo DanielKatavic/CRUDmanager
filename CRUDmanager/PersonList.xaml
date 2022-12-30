@@ -19,7 +19,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Students"/>
-        <ListView Grid.Row="1" Grid.Column="0" x:Name="lvStudents">
+        <ListView Grid.Row="1" Grid.Column="0" x:Name="lvStudents" MouseDoubleClick="PersonList_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="95" Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
@@ -28,7 +28,7 @@
             </ListView.View>
         </ListView>
         <Label Grid.Row="0" Grid.Column="1" Content="Professors"/>
-        <ListView Grid.Row="1" Grid.Column="1" x:Name="lvProfessors">
+        <ListView Grid.Row="1" Grid.Column="1" x:Name="lvProfessors" MouseDoubleClick="PersonList_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="95" Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
