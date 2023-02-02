@@ -8,7 +8,7 @@ namespace CRUDmanager.Dal
         public ICollection<T> GetCollectionOfModel<T>();
         public Professor GetProfessorById(int id);
         public ICollection<Student> GetStudentsForSubject(int subjectId);
-        void RemovePerson(Person? person);
-        void AddOrUpdatePerson(Person? person);
+        public void RemoveItem(dynamic item);
+        public void AddOrUpdateItem(dynamic item);
     }
 }

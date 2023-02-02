@@ -1,11 +1,7 @@
 ﻿using CRUDmanager.Models;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace CRUDmanager
 {
@@ -28,17 +24,10 @@ namespace CRUDmanager
             {
                 return;
             }
-            Person? person = DataContext as Person;
+            var person = DataContext as Person;
             if (person?.Id == -1)
             {
-                if (person is Student)
-                {
-                    UniversityViewModel.Students.Add(person as Student);
-                }
-                else
-                {
-                    UniversityViewModel.Professors.Add(person as Professor);
-                }
+                UniversityViewModel.Persons.Add(person);
             }
             else
             {

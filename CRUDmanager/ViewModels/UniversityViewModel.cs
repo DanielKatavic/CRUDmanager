@@ -1,6 +1,5 @@
 ﻿using CRUDmanager.Dal;
 using CRUDmanager.Models;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,29 +10,36 @@ namespace CRUDmanager.ViewModels
     {
         private readonly IRepository _repository = RepositoryFactory.GetRepository();
 
-        public ObservableCollection<Person> Students { get; set; }
         public ObservableCollection<Subject> Subjects { get; }
-        public ObservableCollection<Person> Professors { get; }
+        public ObservableCollection<Person> Persons { get; }
 
         public UniversityViewModel()
         {
-            Students = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Student>());
+            var students = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Student>());
+            var professors = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Professor>());
             Subjects = new ObservableCollection<Subject>(_repository.GetCollectionOfModel<Subject>());
-            Professors = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Professor>());
-            Students.CollectionChanged += Students_CollectionChanged;
+            Persons = new ObservableCollection<Person>(Enumerable.Concat(students, professors));
+            Persons.CollectionChanged += Persons_CollectionChanged;
             Subjects.CollectionChanged += Subjects_CollectionChanged;
-            Professors.CollectionChanged += Professors_CollectionChanged;
         }
 
-        public ICollection<Person> GetStudentsForSubject(int id)
-        {
-            Students = new ObservableCollection<Person>(_repository.GetStudentsForSubject(id));
-            return Students;
-        }
+        public ICollection<Person> GetStudentsForSubject(int id) 
+            => new ObservableCollection<Person>(_repository.GetStudentsForSubject(id));
 
-        private void Professors_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Persons_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    _repository.AddOrUpdateItem(Persons[e.NewStartingIndex]);
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    _repository.RemoveItem(e.OldItems?.OfType<Person>().First()!);
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    _repository.AddOrUpdateItem(e.NewItems?.OfType<Person>().First()!);
+                    break;
+            }
         }
 
         private void Subjects_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -41,36 +47,17 @@ namespace CRUDmanager.ViewModels
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddOrUpdatePerson(Students[e.NewStartingIndex]);
+                    _repository.AddOrUpdateItem(Subjects[e.NewStartingIndex]);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemovePerson(e.OldItems?.OfType<Student>().First());
+                    _repository.RemoveItem(e.OldItems?.OfType<Subject>().First()!);
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.AddOrUpdatePerson(e.NewItems?.OfType<Student>().First());
+                    _repository.AddOrUpdateItem(e.NewItems?.OfType<Subject>().First()!);
                     break;
             }
         }
 
-        private void Students_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddOrUpdatePerson(Students[e.NewStartingIndex]);
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemovePerson(e.OldItems?.OfType<Student>().First());
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.AddOrUpdatePerson(e.NewItems?.OfType<Student>().First());
-                    break;
-            }
-        }
-
-        internal void Update(Person person)
-        {
-            throw new NotImplementedException();
-        }
+        internal void Update(Person person) => Persons[Persons.IndexOf(person)] = person;
     }
 }

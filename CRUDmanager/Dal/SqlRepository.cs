@@ -99,39 +99,39 @@ namespace CRUDmanager.Dal
             return students;
         }
 
-        public void RemovePerson(Person? person)
+        public void RemoveItem(dynamic item)
         {
             using (SqlConnection con = new(connectionString))
             {
                 con.Open();
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"Remove{person?.GetType().Name}";
+                    cmd.CommandText = $"Remove{item?.GetType().Name}";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int));
-                    cmd.Parameters[0].Value = person?.Id;
+                    cmd.Parameters[0].Value = item?.Id;
                 }
             }
         }
 
-        public void AddOrUpdatePerson(Person? person)
+        public void AddOrUpdateItem(dynamic item)
         {
             using (SqlConnection con = new(connectionString))
             {
                 con.Open();
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"{(person?.Id == -1 ? "Add" : "Update")}{person?.GetType().Name}";
+                    cmd.CommandText = $"{(item?.Id == -1 ? "Add" : "Update")}{item?.GetType().Name}";
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    PropertyInfo[]? propertyInfos = person?.GetType().GetProperties();
+                    PropertyInfo[]? propertyInfos = item?.GetType().GetProperties();
                     ICollection<SqlParameter> parameters = new List<SqlParameter>();
 
                     foreach (var propertyInfo in propertyInfos?.Take(propertyInfos.Length - 2) ?? Enumerable.Empty<PropertyInfo>())
                     {
                         parameters.Add(new SqlParameter($"@{propertyInfo.Name}", propertyInfo.PropertyType == typeof(int) ? SqlDbType.Int : SqlDbType.NVarChar, 50)
                         {
-                            Value = propertyInfo.GetValue(person)
+                            Value = propertyInfo.GetValue(item)
                         });
                     }
 
@@ -139,5 +139,31 @@ namespace CRUDmanager.Dal
                 }
             }
         }
+
+        //public void AddOrUpdateSubject(Subject subject)
+        //{
+        //    using (SqlConnection con = new(connectionString))
+        //    {
+        //        con.Open();
+        //        using (SqlCommand cmd = con.CreateCommand())
+        //        {
+        //            cmd.CommandText = $"{(subject?.Id == -1 ? "Add" : "Update")}{subject?.GetType().Name}";
+        //            cmd.CommandType = CommandType.StoredProcedure;
+
+        //            PropertyInfo[]? propertyInfos = subject?.GetType().GetProperties();
+        //            ICollection<SqlParameter> parameters = new List<SqlParameter>();
+
+        //            foreach (var propertyInfo in propertyInfos?.Take(propertyInfos.Length - 2) ?? Enumerable.Empty<PropertyInfo>())
+        //            {
+        //                parameters.Add(new SqlParameter($"@{propertyInfo.Name}", propertyInfo.PropertyType == typeof(int) ? SqlDbType.Int : SqlDbType.NVarChar, 50)
+        //                {
+        //                    Value = propertyInfo.GetValue(subject)
+        //                });
+        //            }
+
+        //            cmd.Parameters.AddRange(parameters.ToArray());
+        //        }
+        //    }
+        //}
     }
 }

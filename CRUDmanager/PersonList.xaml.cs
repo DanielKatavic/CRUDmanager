@@ -1,5 +1,6 @@
 ﻿using CRUDmanager.Models;
 using CRUDmanager.ViewModels;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace CRUDmanager
@@ -12,8 +13,8 @@ namespace CRUDmanager
         public PersonList(UniversityViewModel universityViewModel) : base(universityViewModel)
         {
             InitializeComponent();
-            lvStudents.ItemsSource = universityViewModel.Students;
-            lvProfessors.ItemsSource = universityViewModel.Professors;
+            lvStudents.ItemsSource = universityViewModel.Persons.OfType<Student>();
+            lvProfessors.ItemsSource = universityViewModel.Persons.OfType<Professor>();
         }
 
         private void PersonList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

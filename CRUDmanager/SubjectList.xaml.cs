@@ -20,11 +20,16 @@ namespace CRUDmanager
         {
             Subject? selectedSubject = cbSubjects.SelectedItem as Subject;
 
+            if (selectedSubject is null)
+            {
+                return;
+            }
+
             FillSubjectInfo(selectedSubject);
 
             SetSubjectInfoVisible();
 
-            lvStudents.ItemsSource = UniversityViewModel.GetStudentsForSubject(selectedSubject!.Id);
+            lvStudents.ItemsSource = UniversityViewModel.GetStudentsForSubject(selectedSubject.Id);
         }
 
         private void FillSubjectInfo(Subject? selectedSubject)
@@ -55,7 +60,7 @@ namespace CRUDmanager
             }
             if (MessageBox.Show("Are you sure?") == MessageBoxResult.OK)
             {
-                UniversityViewModel.Students.Remove(selectedStudent);
+                UniversityViewModel.Persons.Remove(selectedStudent);
             }
         }
 
