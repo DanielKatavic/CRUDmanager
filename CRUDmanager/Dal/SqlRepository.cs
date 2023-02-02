@@ -139,31 +139,5 @@ namespace CRUDmanager.Dal
                 }
             }
         }
-
-        //public void AddOrUpdateSubject(Subject subject)
-        //{
-        //    using (SqlConnection con = new(connectionString))
-        //    {
-        //        con.Open();
-        //        using (SqlCommand cmd = con.CreateCommand())
-        //        {
-        //            cmd.CommandText = $"{(subject?.Id == -1 ? "Add" : "Update")}{subject?.GetType().Name}";
-        //            cmd.CommandType = CommandType.StoredProcedure;
-
-        //            PropertyInfo[]? propertyInfos = subject?.GetType().GetProperties();
-        //            ICollection<SqlParameter> parameters = new List<SqlParameter>();
-
-        //            foreach (var propertyInfo in propertyInfos?.Take(propertyInfos.Length - 2) ?? Enumerable.Empty<PropertyInfo>())
-        //            {
-        //                parameters.Add(new SqlParameter($"@{propertyInfo.Name}", propertyInfo.PropertyType == typeof(int) ? SqlDbType.Int : SqlDbType.NVarChar, 50)
-        //                {
-        //                    Value = propertyInfo.GetValue(subject)
-        //                });
-        //            }
-
-        //            cmd.Parameters.AddRange(parameters.ToArray());
-        //        }
-        //    }
-        //}
     }
 }

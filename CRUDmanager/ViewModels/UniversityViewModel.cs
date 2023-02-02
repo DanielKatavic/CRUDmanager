@@ -15,15 +15,15 @@ namespace CRUDmanager.ViewModels
 
         public UniversityViewModel()
         {
-            var students = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Student>());
-            var professors = new ObservableCollection<Person>(_repository.GetCollectionOfModel<Professor>());
+            var students = _repository.GetCollectionOfModel<Student>();
+            var professors = _repository.GetCollectionOfModel<Professor>();
             Subjects = new ObservableCollection<Subject>(_repository.GetCollectionOfModel<Subject>());
-            Persons = new ObservableCollection<Person>(Enumerable.Concat(students, professors));
+            Persons = new ObservableCollection<Person>(Enumerable.Concat<Person>(students, professors));
             Persons.CollectionChanged += Persons_CollectionChanged;
             Subjects.CollectionChanged += Subjects_CollectionChanged;
         }
 
-        public ICollection<Person> GetStudentsForSubject(int id) 
+        public ICollection<Person> GetStudentsForSubject(int id)
             => new ObservableCollection<Person>(_repository.GetStudentsForSubject(id));
 
         private void Persons_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
