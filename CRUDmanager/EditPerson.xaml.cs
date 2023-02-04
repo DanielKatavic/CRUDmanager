@@ -31,7 +31,7 @@ namespace CRUDmanager
             }
             else
             {
-                UniversityViewModel.Update(person!);
+                UniversityViewModel.UpdateModel(person!);
             }
             Frame?.GoBack();
         }

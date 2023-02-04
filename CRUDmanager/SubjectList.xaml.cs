@@ -76,7 +76,7 @@ namespace CRUDmanager
         {
             if (cbSubjects.SelectedItem is Subject selectedSubject)
             {
-                //Frame?.Navigate(new EditPerson(UniversityViewModel, selectedSubject) { Frame = Frame });
+                Frame?.Navigate(new EditSubject(UniversityViewModel, selectedSubject) { Frame = Frame });
             }
         }
 

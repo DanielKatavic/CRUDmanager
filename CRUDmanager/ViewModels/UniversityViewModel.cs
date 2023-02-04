@@ -1,7 +1,10 @@
 ﻿using CRUDmanager.Dal;
 using CRUDmanager.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CRUDmanager.ViewModels
@@ -10,8 +13,8 @@ namespace CRUDmanager.ViewModels
     {
         private readonly IRepository _repository = RepositoryFactory.GetRepository();
 
-        public ObservableCollection<Subject> Subjects { get; }
-        public ObservableCollection<Person> Persons { get; }
+        public ObservableCollection<Subject> Subjects { get; set; }
+        public ObservableCollection<Person> Persons { get; set; }
 
         public UniversityViewModel()
         {
@@ -26,38 +29,45 @@ namespace CRUDmanager.ViewModels
         public ICollection<Person> GetStudentsForSubject(int id)
             => new ObservableCollection<Person>(_repository.GetStudentsForSubject(id));
 
-        private void Persons_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Persons_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+            => HandleCollectionChanged<Person>(e);
+
+        private void Subjects_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+            => HandleCollectionChanged<Subject>(e);
+
+        private void HandleCollectionChanged<T>(NotifyCollectionChangedEventArgs e)
         {
+            dynamic? list = GetType().GetProperties().FirstOrDefault(p => p.PropertyType == typeof(ObservableCollection<T>));
+            if (list is null)
+            {
+                return;
+            }
             switch (e.Action)
             {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddOrUpdateItem(Persons[e.NewStartingIndex]);
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemoveItem(e.OldItems?.OfType<Person>().First()!);
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.AddOrUpdateItem(e.NewItems?.OfType<Person>().First()!);
-                    break;
+                case NotifyCollectionChangedAction.Add:
+                    var collection = list?.GetMethod?.Invoke(this, null);
+                    if (collection is ObservableCollection<T> col)
+                    {
+                        _repository.AddOrUpdateItem(col[e.NewStartingIndex]!);
+                    }
+                    return;
+                case NotifyCollectionChangedAction.Remove:
+                    _repository.RemoveItem(e.OldItems!.OfType<T>().First()!);
+                    return;
+                case NotifyCollectionChangedAction.Replace:
+                    _repository.AddOrUpdateItem(e.NewItems!.OfType<T>().First()!);
+                    return;
             }
         }
 
-        private void Subjects_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        internal void UpdateModel<T>(T model)
         {
-            switch (e.Action)
+            var list = GetType().GetProperties().FirstOrDefault(p => p.PropertyType == typeof(ObservableCollection<T>));
+            var collection = list?.GetMethod?.Invoke(this, null);
+            if (collection is ObservableCollection<T> col)
             {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    _repository.AddOrUpdateItem(Subjects[e.NewStartingIndex]);
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    _repository.RemoveItem(e.OldItems?.OfType<Subject>().First()!);
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    _repository.AddOrUpdateItem(e.NewItems?.OfType<Subject>().First()!);
-                    break;
+                col[col.IndexOf(model)] = model;
             }
         }
-
-        internal void Update(Person person) => Persons[Persons.IndexOf(person)] = person;
     }
 }
